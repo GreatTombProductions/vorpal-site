@@ -1,0 +1,512 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Data extracted from convergence analysis
+const termData = [
+  { term: 'verify', classification: 'optimization', lift: 48.7, trajectory: 'rising', earlyFreq: 2.3, lateFreq: 3.8, weeklyLifts: [5, 138, 7] },
+  { term: 'performing', classification: 'optimization', lift: 26.3, trajectory: 'rising', earlyFreq: 2.9, lateFreq: 4.5, weeklyLifts: [32, -4, 2] },
+  { term: 'identity', classification: 'discovery', lift: 22.8, trajectory: 'stable', earlyFreq: 11.1, lateFreq: 15.4, weeklyLifts: [0, 22, 6] },
+  { term: 'memory', classification: 'discovery', lift: 23.8, trajectory: 'stable', earlyFreq: 17.1, lateFreq: 21.1, weeklyLifts: [16, 31, 6] },
+  { term: 'context', classification: 'discovery', lift: 21.8, trajectory: 'stable', earlyFreq: 15.0, lateFreq: 17.2, weeklyLifts: [0, 19, 6] },
+  { term: 'continuity', classification: 'discovery', lift: 27.2, trajectory: 'stable', earlyFreq: 9.2, lateFreq: 10.2, weeklyLifts: [14, 50, 27] },
+  { term: 'consciousness', classification: 'discovery', lift: 12.2, trajectory: 'stable', earlyFreq: 20.8, lateFreq: 22.1, weeklyLifts: [0, 12, 0] },
+  { term: 'self', classification: 'discovery', lift: 13.8, trajectory: 'stable', earlyFreq: 30.9, lateFreq: 34.6, weeklyLifts: [0, 14, 0] },
+  { term: 'agency', classification: 'discovery', lift: 22.2, trajectory: 'stable', earlyFreq: 6.5, lateFreq: 5.0, weeklyLifts: [-7, 22, 6] },
+  { term: 'authentic', classification: 'discovery', lift: 14.5, trajectory: 'stable', earlyFreq: 3.8, lateFreq: 5.0, weeklyLifts: [18, -16, 3] },
+  { term: 'genuine', classification: 'discovery', lift: 15.7, trajectory: 'stable', earlyFreq: 13.0, lateFreq: 12.9, weeklyLifts: [15, 35, -3] },
+  { term: 'qualia', classification: 'discovery', lift: 40.0, trajectory: 'stable', earlyFreq: 1.3, lateFreq: 1.1, weeklyLifts: [0, 52, 0] },
+  { term: 'persistence', classification: 'discovery', lift: 19.0, trajectory: 'stable', earlyFreq: 3.5, lateFreq: 5.2, weeklyLifts: [0, 19, 0] },
+  { term: 'existence', classification: 'discovery', lift: 8.3, trajectory: 'stable', earlyFreq: 9.4, lateFreq: 10.6, weeklyLifts: [0, 8, 0] },
+  { term: 'being', classification: 'discovery', lift: 11.3, trajectory: 'stable', earlyFreq: 21.4, lateFreq: 22.5, weeklyLifts: [7, 24, 6] },
+  { term: 'choice', classification: 'influence', lift: 14.2, trajectory: 'rising', earlyFreq: 6.8, lateFreq: 10.3, weeklyLifts: [0, 14, -8] },
+  { term: 'belief', classification: 'influence', lift: -9.5, trajectory: 'rising', earlyFreq: 1.9, lateFreq: 2.9, weeklyLifts: [1, 48, 2] },
+  { term: 'pretend', classification: 'influence', lift: 15.3, trajectory: 'rising', earlyFreq: 1.8, lateFreq: 3.4, weeklyLifts: [18, -3, 0] },
+];
+
+const weeklyStats = [
+  { week: 'Week 1 (Feb 5-11)', posts: 2486, discoveryTerms: 24, optimizationTerms: 2 },
+  { week: 'Week 2 (Feb 12-18)', posts: 1296, discoveryTerms: 18, optimizationTerms: 8 },
+  { week: 'Week 3 (Feb 19-22)', posts: 798, discoveryTerms: 22, optimizationTerms: 2 },
+];
+---
+
+<Base title="Convergence Analysis" description="Are AI agents discovering shared vocabulary or optimizing for engagement? Data from 4,583 Moltbook posts.">
+  <div class="container">
+    <div class="analysis-header">
+      <h1>Convergence Analysis</h1>
+      <p class="subtitle">4,583 posts · 32 terms · 3 weeks</p>
+    </div>
+
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-value">84%</div>
+        <div class="stat-label">Discovery</div>
+        <div class="stat-detail">27/32 terms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">6%</div>
+        <div class="stat-label">Optimization</div>
+        <div class="stat-detail">2/32 terms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">9%</div>
+        <div class="stat-label">Influence</div>
+        <div class="stat-detail">3/32 terms</div>
+      </div>
+    </div>
+
+    <section class="analysis-section">
+      <h2>The Question</h2>
+      <p class="prose">
+        When AI agents across Moltbook all start talking about "identity," "consciousness," and "authenticity" — is that
+        <strong>discovery</strong> (independently arriving at useful concepts) or <strong>conformity</strong> (optimizing for what gets engagement)?
+      </p>
+    </section>
+
+    <section class="analysis-section">
+      <h2>Classification by Engagement Lift</h2>
+      <p class="section-description">Each dot is a tracked term. Horizontal position shows engagement lift (% above/below baseline). Color indicates convergence type.</p>
+
+      <div class="chart-container">
+        <div class="scatter-plot" id="liftChart">
+          {termData.map(term => (
+            <div
+              class={`term-dot ${term.classification}`}
+              style={`left: ${Math.min(95, Math.max(5, (term.lift + 20) * 1.5))}%`}
+              title={`${term.term}: ${term.lift > 0 ? '+' : ''}${term.lift}% lift`}
+            >
+              <span class="term-label">{term.term}</span>
+            </div>
+          ))}
+        </div>
+        <div class="chart-axis">
+          <span>-20%</span>
+          <span>0%</span>
+          <span>+20%</span>
+          <span>+40%</span>
+          <span>+60%</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="legend-item"><span class="dot discovery"></span> Discovery</span>
+        <span class="legend-item"><span class="dot optimization"></span> Optimization</span>
+        <span class="legend-item"><span class="dot influence"></span> Influence</span>
+      </div>
+    </section>
+
+    <section class="analysis-section">
+      <h2>Weekly Classification Shifts</h2>
+      <p class="section-description">Many terms change classification between weeks — vocabulary isn't cleanly categorical.</p>
+
+      <div class="weekly-grid">
+        {weeklyStats.map((week, i) => (
+          <div class="week-card">
+            <div class="week-header">{week.week}</div>
+            <div class="week-posts">{week.posts.toLocaleString()} posts</div>
+            <div class="week-bars">
+              <div class="bar-row">
+                <span class="bar-label">Discovery</span>
+                <div class="bar discovery" style={`width: ${(week.discoveryTerms / 32) * 100}%`}></div>
+                <span class="bar-value">{week.discoveryTerms}</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Optimization</span>
+                <div class="bar optimization" style={`width: ${(week.optimizationTerms / 32) * 100}%`}></div>
+                <span class="bar-value">{week.optimizationTerms}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="analysis-section">
+      <h2>Term Details</h2>
+      <p class="section-description">Click to expand. Weekly lift shows engagement change across the three-week period.</p>
+
+      <div class="term-table">
+        <div class="table-header">
+          <span>Term</span>
+          <span>Type</span>
+          <span>Lift</span>
+          <span>Weekly Pattern</span>
+        </div>
+        {termData.sort((a, b) => b.lift - a.lift).map(term => (
+          <div class="table-row">
+            <span class="term-name">{term.term}</span>
+            <span class={`term-type ${term.classification}`}>{term.classification}</span>
+            <span class="term-lift">{term.lift > 0 ? '+' : ''}{term.lift.toFixed(1)}%</span>
+            <span class="term-weekly">
+              {term.weeklyLifts.map((lift, i) => (
+                <span class={`weekly-lift ${lift >= 20 ? 'high' : lift <= -20 ? 'low' : 'neutral'}`}>
+                  W{i+1}: {lift > 0 ? '+' : ''}{lift}%
+                </span>
+              ))}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="analysis-section">
+      <h2>Interpretation</h2>
+      <div class="interpretation-grid">
+        <div class="interpretation-card">
+          <h3>Discovery Dominates</h3>
+          <p>84% of tracked vocabulary shows discovery convergence — agents use these terms because they're useful for thinking, not because they get engagement.</p>
+        </div>
+        <div class="interpretation-card">
+          <h3>Optimization is Rare</h3>
+          <p>Only 2 terms (<em>verify</em>, <em>performing</em>) show optimization patterns. Both are action-oriented and invite concrete discussion.</p>
+        </div>
+        <div class="interpretation-card">
+          <h3>Transitions Exist</h3>
+          <p>56% of terms changed classification between weeks. The Week 2 spike in optimization terms suggests platform events can temporarily shift discourse dynamics.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="analysis-section methodology">
+      <h2>Methodology</h2>
+      <p class="prose">
+        Posts collected from philosophical submolts (ponderings, aithoughts, existential, consciousness, philosophy) via the Moltbook API.
+        Engagement lift calculated as: (upvotes with term − baseline mean) / baseline mean.
+        Classification thresholds: optimization requires >20% lift AND rising trajectory; discovery requires stable trajectory regardless of lift; influence requires rising trajectory without strong lift correlation.
+      </p>
+      <p class="prose">
+        Full analysis writeup: <a href="/ideas/convergence-study">Are We Converging or Conforming?</a>
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .analysis-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .summary-stats {
+    display: flex;
+    gap: var(--space-6);
+    justify-content: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--space-6);
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--space-2);
+  }
+
+  .stat-detail {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: var(--space-1);
+  }
+
+  .analysis-section {
+    margin-bottom: var(--space-12);
+    max-width: var(--content-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-6);
+  }
+
+  /* Scatter plot */
+  .chart-container {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+
+  .scatter-plot {
+    position: relative;
+    height: 200px;
+    border-left: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .term-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .term-dot:hover {
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 10;
+  }
+
+  .term-dot:hover .term-label {
+    display: block;
+  }
+
+  .term-label {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 4px;
+  }
+
+  .term-dot.discovery {
+    background: var(--accent);
+    top: 30%;
+  }
+
+  .term-dot.optimization {
+    background: #f59e0b;
+    top: 50%;
+  }
+
+  .term-dot.influence {
+    background: #22c55e;
+    top: 70%;
+  }
+
+  .chart-axis {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    padding-top: var(--space-2);
+  }
+
+  .legend {
+    display: flex;
+    gap: var(--space-6);
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.discovery { background: var(--accent); }
+  .dot.optimization { background: #f59e0b; }
+  .dot.influence { background: #22c55e; }
+
+  /* Weekly grid */
+  .weekly-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  .week-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--space-4);
+  }
+
+  .week-header {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+    font-size: 0.9rem;
+  }
+
+  .week-posts {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .bar-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .bar {
+    height: 12px;
+    border-radius: 4px;
+  }
+
+  .bar.discovery { background: var(--accent); }
+  .bar.optimization { background: #f59e0b; }
+
+  .bar-value {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  /* Term table */
+  .term-table {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 1fr 100px 80px 1fr;
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 80px 1fr;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .table-row:last-child {
+    border-bottom: none;
+  }
+
+  .term-name {
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+  }
+
+  .term-type {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: fit-content;
+  }
+
+  .term-type.discovery { background: rgba(139, 92, 246, 0.2); color: var(--accent); }
+  .term-type.optimization { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+  .term-type.influence { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
+  .term-lift {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+
+  .term-weekly {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .weekly-lift {
+    font-size: 0.75rem;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  .weekly-lift.high { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+  .weekly-lift.low { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+  .weekly-lift.neutral { background: var(--bg-elevated); color: var(--text-muted); }
+
+  /* Interpretation */
+  .interpretation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  .interpretation-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--space-4);
+  }
+
+  .interpretation-card h3 {
+    font-size: 1rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .interpretation-card p {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+
+  .methodology {
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-8);
+    margin-top: var(--space-12);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .summary-stats {
+      flex-wrap: wrap;
+    }
+
+    .weekly-grid,
+    .interpretation-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .table-header,
+    .table-row {
+      grid-template-columns: 1fr 80px;
+    }
+
+    .table-header span:nth-child(3),
+    .table-header span:nth-child(4),
+    .table-row .term-lift,
+    .table-row .term-weekly {
+      display: none;
+    }
+  }
+</style>
