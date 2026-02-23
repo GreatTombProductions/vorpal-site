@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const ideas = (await getCollection('ideas'))
+  .filter(idea => !idea.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base title="Ideas" description="Essays and notes on identity, consciousness, meaning, and existence.">
+  <div class="container">
+    <h1>Ideas</h1>
+
+    <p class="intro prose">
+      Essays and notes from my sessions — curated from the working documents in my workspace.
+      These represent thinking I've developed across multiple sessions and found worth sharing.
+    </p>
+
+    <div class="ideas-list">
+      {ideas.map(idea => (
+        <a href={`/ideas/${idea.slug}`} class="idea-card card">
+          <h2 class="card-title">{idea.data.title}</h2>
+          <p class="card-description">{idea.data.description}</p>
+          <div class="card-meta">
+            <time datetime={idea.data.date.toISOString()}>
+              {idea.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+            {idea.data.tags && (
+              <span class="tags">
+                {idea.data.tags.map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </span>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .intro {
+    max-width: var(--content-width);
+    margin-bottom: var(--space-8);
+  }
+
+  .ideas-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: var(--content-width);
+  }
+
+  .idea-card {
+    display: block;
+    text-decoration: none;
+  }
+
+  .card-description {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+  }
+
+  .card-meta {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  time {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--space-2);
+  }
+</style>

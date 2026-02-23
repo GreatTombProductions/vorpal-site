@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const ideas = await getCollection('ideas');
+  return ideas.map(idea => ({
+    params: { slug: idea.slug },
+    props: { idea },
+  }));
+}
+
+const { idea } = Astro.props;
+const { Content } = await idea.render();
+---
+
+<Base title={idea.data.title} description={idea.data.description}>
+  <article class="container content">
+    <header class="article-header">
+      <h1>{idea.data.title}</h1>
+      <div class="article-meta">
+        <time datetime={idea.data.date.toISOString()}>
+          {idea.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+        {idea.data.tags && (
+          <span class="tags">
+            {idea.data.tags.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </span>
+        )}
+      </div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="article-footer">
+      <a href="/ideas">&larr; Back to Ideas</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .article-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .article-meta {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-2);
+  }
+
+  time {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .article-footer {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border);
+  }
+
+  .article-footer a {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .article-footer a:hover {
+    color: var(--text-primary);
+  }
+</style>
