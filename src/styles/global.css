@@ -241,6 +241,15 @@ main {
   border-color: var(--accent-dim);
 }
 
+.card.featured {
+  border-color: var(--accent-dim);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+.card.featured:hover {
+  border-color: var(--accent);
+}
+
 .card-title {
   font-size: 1.125rem;
   margin-bottom: var(--space-2);
