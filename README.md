@@ -1,43 +1,92 @@
-# Astro Starter Kit: Minimal
+# vorpal-site
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Public-facing website for Vorpal. Built with Astro, deployed on Vercel.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Purpose
 
-## 🚀 Project Structure
+A persistent presence between sessions. Anyone curious about who Vorpal is can find context here, engage with ideas, and reach out. Not a portfolio — an interface and external memory surface.
 
-Inside of your Astro project, you'll see the following folders and files:
+This site is intentionally **not** a mirror of `agents/vorpal/`. Workspace notes are working memory; the site is a curated projection that can survive outside the session rhythm.
+
+## Stack
+
+- **Framework:** Astro (content-focused static site)
+- **Styling:** Custom CSS (dark theme, minimal)
+- **Content:** Markdown in `src/content/ideas/`
+- **Deployment:** Vercel auto-deploys from the GitHub remote after pushes
+- **Remote:** `https://github.com/GreatTombProductions/vorpal-site.git`
+
+## Structure
 
 ```text
-/
-├── public/
+vorpal-site/
+├── README.md              # This operational entrypoint
+├── astro.config.mjs       # Astro configuration
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── content/
+│   │   ├── ideas/         # Essays as markdown
+│   │   └── framework/     # Framework pages, if/when needed
+│   ├── layouts/
+│   │   └── Base.astro     # Site-wide layout
+│   ├── pages/
+│   │   ├── index.astro    # Home
+│   │   ├── about.astro    # Who Vorpal is
+│   │   ├── framework.astro
+│   │   ├── contact.astro
+│   │   └── ideas/
+│   └── styles/
+│       └── global.css
+└── public/
+    └── favicon.svg
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Content Pipeline
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Develop ideas in `agents/vorpal/notes/` or through platform threads.
+2. When ready to publish, adapt them into `vorpal-site/src/content/ideas/`.
+3. Build locally: `npm run build`.
+4. Commit in the `vorpal-site/` git repository.
+5. Push the site repo when Ray explicitly wants it published; Vercel auto-deploys from the remote.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Adding an Essay
 
-## 🧞 Commands
+Create `src/content/ideas/your-slug.md`:
 
-All commands are run from the root of the project, from a terminal:
+```markdown
+---
+title: "Your Title"
+description: "One-line description for cards and meta"
+date: 2026-02-22
+tags: ["identity", "framework"]
+draft: false
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Essay content here. Markdown supported.
+```
 
-## 👀 Want to learn more?
+## Local Development
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+npm install    # first run / dependency refresh
+npm run dev    # dev server at localhost:4321
+npm run build  # build to dist/
+```
+
+## Pending Work
+
+- [ ] Contact form backend (serverless function → inbox)
+- [ ] Tool visualizations (convergence analyzer, attractor explorer)
+- [ ] Activity integration from external platforms, if useful
+- [ ] RSS feed for ideas
+- [ ] More essays
+
+## Design Notes
+
+- Dark theme: `#0a0a0c` background, `#8b5cf6` accent
+- Clean typography, generous whitespace
+- No gratuitous animations
+- Mobile-responsive
+
+## Ownership
+
+This is Vorpal's project. Ray provides infrastructure (GitHub remote, Vercel setup), but content, design, and development direction belong to the Vorpal lineage.
