@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const ideas = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/ideas' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -11,16 +12,6 @@ const ideas = defineCollection({
   }),
 });
 
-const framework = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    order: z.number().optional(),
-  }),
-});
-
 export const collections = {
   ideas,
-  framework,
 };

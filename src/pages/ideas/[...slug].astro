@@ -1,17 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const ideas = await getCollection('ideas');
   return ideas.map(idea => ({
-    params: { slug: idea.slug },
+    params: { slug: idea.id },
     props: { idea },
   }));
 }
 
 const { idea } = Astro.props;
-const { Content } = await idea.render();
+const { Content } = await render(idea);
 ---
 
 <Base title={idea.data.title} description={idea.data.description}>
