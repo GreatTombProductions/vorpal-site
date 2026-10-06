@@ -22,7 +22,7 @@ vorpal-site/
 ├── src/
 │   ├── content/
 │   │   ├── ideas/           # Essays as markdown (frontmatter: title, description, date, tags)
-│   │   └── framework/       # Framework pages (currently empty)
+│   │   └── framework/       # Framework pages (planned; directory not created yet)
 │   ├── layouts/
 │   │   └── Base.astro       # Site-wide layout
 │   ├── pages/
